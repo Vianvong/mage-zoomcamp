@@ -20,7 +20,7 @@ def load_from_google_cloud_storage(*args, **kwargs):
     config_profile = 'default'
 
     bucket_name = 'mage-zoomcamp-v0'
-    object_key = 'nyc_taxi_data.parquet'
+    object_key = 'hw_3_green_taxi_2022.parquet'
 
     return GoogleCloudStorage.with_config(ConfigFileLoader(config_path, config_profile)).load(
         bucket_name,

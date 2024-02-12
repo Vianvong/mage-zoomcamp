@@ -12,36 +12,18 @@ def load_data_from_api(*args, **kwargs):
     """
     Template for loading data from API
     """
-    url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_{}.csv.gz'
-    required_months = ['2020-10', '2020-11', '2020-12']
-    
-    taxi_dtypes = {
-        'VendorID': pd.Int64Dtype(),
-        'store_and_fwd_flag': str,
-        'RatecodeID': pd.Int64Dtype(),
-        'PULocationID': pd.Int64Dtype(),
-        'DOLocationID': pd.Int64Dtype(),
-        'passenger_count': pd.Int64Dtype(),
-        'trip_distance': float,
-        'fare_amount': float,
-        'extra': float,
-        'mta_tax': float,
-        'tip_amount': float,
-        'tolls_amount': float,
-        'ehail_fee': float,
-        'improvement_surcharge': float,
-        'total_amount': float,
-        'payment_type': pd.Int64Dtype(),
-        'trip_type': pd.Int64Dtype(),
-        'congestion_surcharge': float
-    }
-    parse_dates = ['lpep_pickup_datetime', 'lpep_dropoff_datetime']
+    url = 'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_{}.parquet'
+    required_months = [
+        '2022-01', '2022-02', '2022-03', '2022-04', '2022-05', '2022-06', '2022-07', '2022-08', '2022-09', 
+        '2022-10', '2022-11', '2022-12']
     
     df_list = []
     for month in required_months:
-        df_list.append(pd.read_csv(url.format(month), sep=',', compression='gzip', dtype=taxi_dtypes, parse_dates=parse_dates))
+        df_list.append(pd.read_parquet(url.format(month)))
+    df = pd.concat(df_list)
+    df.fillna(-1, inplace=True)
 
-    return pd.concat(df_list)
+    return df
 
 @test
 def test_output(output, *args) -> None:
